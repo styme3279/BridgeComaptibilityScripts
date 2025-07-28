@@ -26,17 +26,9 @@ from transformer_lens.hook_points import HookPoint
 t.set_grad_enabled(False)
 device = t.device("mps" if t.backends.mps.is_available() else "cuda" if t.cuda.is_available() else "cpu")
 
-# Make sure exercises are in the path
-chapter = "chapter1_transformer_interp"
-section = "part41_indirect_object_identification"
-root_dir = next(p for p in Path.cwd().parents if (p / chapter).exists())
-exercises_dir = root_dir / chapter / "exercises"
-section_dir = exercises_dir / section
-if str(exercises_dir) not in sys.path:
-    sys.path.append(str(exercises_dir))
 
-import part41_indirect_object_identification.tests as tests
-from plotly_utils import bar, imshow, line, scatter
+import ARENA_files.arena_part41_ioi_tests as tests
+from ARENA_files.arena_plotly_utils import bar, imshow, line, scatter
 
 MAIN = __name__ == "__main__"
 
@@ -626,7 +618,7 @@ if MAIN:
 
 # %%
 
-from part41_indirect_object_identification.ioi_dataset import NAMES, IOIDataset
+from ARENA_files.ioi_dataset import NAMES, IOIDataset
 
 # %%
 
@@ -1319,7 +1311,7 @@ def add_mean_ablation_hook(
 # %%
 
 if MAIN:
-    import part41_indirect_object_identification.ioi_circuit_extraction as ioi_circuit_extraction
+    import ARENA_files.ioi_circuit_extraction as ioi_circuit_extraction
 
     model = ioi_circuit_extraction.add_mean_ablation_hook(
         model,

@@ -21,17 +21,18 @@ device = t.device("mps" if t.backends.mps.is_available() else "cuda" if t.cuda.i
 t.set_grad_enabled(False)
 
 # Make sure exercises are in the path
-chapter = "chapter1_transformer_interp"
-section = "part51_balanced_bracket_classifier"
-exercises_dir = next(p for p in Path.cwd().parents if p.name == chapter) / "exercises"
-section_dir = exercises_dir / section
-if str(exercises_dir) not in sys.path:
-    sys.path.append(str(exercises_dir))
+# chapter = "chapter1_transformer_interp"
+# section = "part51_balanced_bracket_classifier"
+# exercises_dir = next(p for p in Path.cwd().parents if p.name == chapter) / "exercises"
+# section_dir = exercises_dir / section
+# if str(exercises_dir) not in sys.path:
+#     sys.path.append(str(exercises_dir))
 
-import part51_balanced_bracket_classifier.tests as tests
-import plotly_utils
-from part51_balanced_bracket_classifier.brackets_datasets import BracketsDataset, SimpleTokenizer
-from plotly_utils import bar, hist
+import ARENA_files.part51_balanced_bracket_classifier_tests as tests
+import ARENA_files.arena_plotly_utils as arena_plotly_utils
+# from arena_balanced_bracket_classifier_datasets import BracketsDataset, SimpleTokenizer
+from ARENA_files.arena_plotly_utils import bar, hist
+from ARENA_files.arena_balanced_bracket_classifier_datasets import BracketsDataset, SimpleTokenizer
 
 MAIN = __name__ == "__main__"
 
@@ -58,7 +59,7 @@ if MAIN:
 
     model = HookedTransformer(cfg).eval()
 
-    state_dict = t.load(section_dir / "brackets_model_state_dict.pt", map_location=device)
+    state_dict = t.load("ARENA_files/brackets_model_state_dict.pt", map_location=device)
     model.load_state_dict(state_dict)
 
 # %%
@@ -113,7 +114,7 @@ if MAIN:
 
 if MAIN:
     N_SAMPLES = 5000
-    with open(section_dir / "brackets_data.json") as f:
+    with open("ARENA_files/brackets_data.json") as f:
         data_tuples = json.load(f)
         print(f"loaded {len(data_tuples)} examples, using {N_SAMPLES}")
         data_tuples = data_tuples[:N_SAMPLES]
@@ -402,7 +403,7 @@ if MAIN:
 
     tests.test_out_by_component_in_unbalanced_dir(out_by_component_in_unbalanced_dir, model, data)
 
-    plotly_utils.hists_per_comp(out_by_component_in_unbalanced_dir, data, xaxis_range=[-10, 20])
+    arena_plotly_utils.hists_per_comp(out_by_component_in_unbalanced_dir, data, xaxis_range=[-10, 20])
 
 # %%
 
@@ -436,19 +437,19 @@ if MAIN:
         "balanced": ~negative_failure & ~total_elevation_failure,
     }
 
-    plotly_utils.plot_failure_types_scatter(h20_in_unbalanced_dir, h21_in_unbalanced_dir, failure_types_dict, data)
+    arena_plotly_utils.plot_failure_types_scatter(h20_in_unbalanced_dir, h21_in_unbalanced_dir, failure_types_dict, data)
 
 # %%
 
 if MAIN:
-    plotly_utils.plot_contribution_vs_open_proportion(
+    arena_plotly_utils.plot_contribution_vs_open_proportion(
         h20_in_unbalanced_dir, "Head 2.0 contribution vs proportion of open brackets '('", failure_types_dict, data
     )
 
 # %%
 
 if MAIN:
-    plotly_utils.plot_contribution_vs_open_proportion(
+    arena_plotly_utils.plot_contribution_vs_open_proportion(
         h21_in_unbalanced_dir, "Head 2.1 contribution vs proportion of open brackets '('", failure_types_dict, data
     )
 
@@ -521,12 +522,12 @@ if MAIN:
 
     tests.test_out_by_component_in_pre_20_unbalanced_dir(out_by_component_in_pre_20_unbalanced_dir, model, data)
 
-    plotly_utils.hists_per_comp(out_by_component_in_pre_20_unbalanced_dir, data, xaxis_range=(-5, 12))
+    arena_plotly_utils.hists_per_comp(out_by_component_in_pre_20_unbalanced_dir, data, xaxis_range=(-5, 12))
 
 # %%
 
 if MAIN:
-    plotly_utils.mlp_attribution_scatter(out_by_component_in_pre_20_unbalanced_dir, data, failure_types_dict)
+    arena_plotly_utils.mlp_attribution_scatter(out_by_component_in_pre_20_unbalanced_dir, data, failure_types_dict)
 
 # %%
 
@@ -623,7 +624,7 @@ if MAIN:
         ]
 
         # Plot neurons' activations
-        plotly_utils.plot_neurons(neurons_in_unbalanced_dir, model, data, failure_types_dict, layer)
+        arena_plotly_utils.plot_neurons(neurons_in_unbalanced_dir, model, data, failure_types_dict, layer)
 
 # %%
 
